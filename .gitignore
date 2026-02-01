@@ -1,0 +1,10 @@
+# Ignore everything by default
+*
+
+# But include these deployment files
+!index.html
+!t20-worldcup-logo.png
+!vercel.json
+!README.md
+!DEPLOYMENT-GUIDE.md
+!.gitignore
