@@ -5,6 +5,11 @@
 !index.html
 !t20-worldcup-logo.png
 !vercel.json
+!package.json
 !README.md
 !DEPLOYMENT-GUIDE.md
 !.gitignore
+
+# Include api directory
+!api/
+!api/**

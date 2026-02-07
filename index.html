@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>T20 World Cup 2026 - Villa Hakatha Predictions</title>
 
+    <!-- Favicon - Cricket Ball Icon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0047AB">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,35 +50,53 @@
         .header {
             background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
             color: var(--white);
-            padding: 1.5rem 2rem;
+            padding: 1rem 2rem;
             box-shadow: var(--shadow-lg);
             position: sticky;
             top: 0;
             z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
         }
 
-        .header h1 {
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .header-logo {
+            width: 55px;
+            height: 55px;
+            border-radius: 10px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+            flex-shrink: 0;
+        }
+
+        .header-text h1 {
             font-family: 'Bebas Neue', cursive;
-            font-size: 2.5rem;
+            font-size: 2rem;
             letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: 0.3rem;
+            line-height: 1.1;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .header .subtitle {
-            font-size: 1rem;
+        .header-text .subtitle {
+            font-size: 0.95rem;
             font-weight: 500;
             opacity: 0.95;
         }
 
         .user-info {
-            position: absolute;
-            top: 1.5rem;
-            right: 2rem;
             display: flex;
             align-items: center;
             gap: 1rem;
+            flex-shrink: 0;
         }
 
         .user-info span {
@@ -561,6 +585,14 @@
             margin-bottom: 0.5rem;
         }
 
+        .team-flag img {
+            width: 56px;
+            height: 42px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
         .team-name {
             font-family: 'Russo One', sans-serif;
             font-size: 1.2rem;
@@ -608,6 +640,115 @@
         .countdown-time {
             font-size: 1.5rem;
             font-weight: bold;
+        }
+
+        .prediction-stats-container {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .prediction-stat-box {
+            flex: 1;
+            padding: 0.8rem;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .prediction-stat-label {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+        }
+
+        .prediction-stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .match-points-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #000;
+            padding: 0.3rem 0.7rem;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 2px solid #ffa500;
+        }
+
+        .user-predictor-box {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .user-predictor-title {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .user-predictor-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .predictor-team {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .predictor-team-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .predictor-team-percent {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .predictor-divider {
+            font-size: 1.5rem;
+            opacity: 0.5;
+        }
+
+        .team-prediction-bar {
+            height: 6px;
+            background: var(--border-gray);
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-prediction-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            transition: width 0.3s ease;
+        }
+
+        .team-prediction-percent {
+            font-size: 0.75rem;
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-top: 0.3rem;
         }
 
         .prediction-status {
@@ -830,6 +971,15 @@
 
         .team-option-flag {
             font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .team-option-flag img {
+            width: 32px;
+            height: 24px;
+            object-fit: cover;
+            border-radius: 3px;
         }
 
         .team-option-name {
@@ -1114,33 +1264,35 @@
             }
 
             .header {
-                padding: 1rem;
+                padding: 0.8rem 1rem;
+                flex-wrap: wrap;
             }
 
-            .header h1 {
-                font-size: 1.5rem;
-                margin-bottom: 0.3rem;
+            .header-logo {
+                width: 40px;
+                height: 40px;
+                border-radius: 8px;
             }
 
-            .header .subtitle {
-                font-size: 0.85rem;
+            .header-text h1 {
+                font-size: 1.3rem;
+            }
+
+            .header-text .subtitle {
+                font-size: 0.8rem;
             }
 
             .user-info {
-                position: static;
-                margin-top: 0.8rem;
-                justify-content: center;
-                flex-direction: column;
                 gap: 0.5rem;
             }
 
             .user-info span {
-                font-size: 0.95rem;
+                font-size: 0.85rem;
             }
 
             .logout-btn {
-                padding: 0.4rem 1rem;
-                font-size: 0.9rem;
+                padding: 0.3rem 0.8rem;
+                font-size: 0.85rem;
             }
 
             .login-container h2 {
@@ -1221,6 +1373,11 @@
                 font-size: 2.5rem;
             }
 
+            .team-flag img {
+                width: 44px;
+                height: 33px;
+            }
+
             .team-name {
                 font-size: 1rem;
             }
@@ -1253,6 +1410,22 @@
                 flex: 1 1 45%;
             }
 
+            .user-predictor-box {
+                padding: 0.8rem;
+            }
+
+            .user-predictor-stats {
+                gap: 1rem;
+            }
+
+            .predictor-team-name {
+                font-size: 0.8rem;
+            }
+
+            .predictor-team-percent {
+                font-size: 1.3rem;
+            }
+
             .leaderboard-table {
                 font-size: 0.85rem;
             }
@@ -1282,10 +1455,17 @@
 
             .admin-match-card {
                 padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
             }
 
             .admin-match-teams {
                 font-size: 0.95rem;
+            }
+
+            .admin-match-teams img {
+                width: 24px;
+                height: 18px;
             }
 
             .admin-match-details {
@@ -1330,12 +1510,17 @@
 
         /* Extra small devices (phones in portrait mode) */
         @media (max-width: 480px) {
-            .header h1 {
-                font-size: 1.3rem;
+            .header-text h1 {
+                font-size: 1.1rem;
             }
 
-            .header .subtitle {
-                font-size: 0.75rem;
+            .header-text .subtitle {
+                font-size: 0.7rem;
+            }
+
+            .header-logo {
+                width: 35px;
+                height: 35px;
             }
 
             .login-container h2 {
@@ -1352,6 +1537,11 @@
 
             .team-flag {
                 font-size: 2rem;
+            }
+
+            .team-flag img {
+                width: 36px;
+                height: 27px;
             }
 
             .team-name {
@@ -1407,20 +1597,6 @@
             .input-group input,
             .input-group select {
                 padding: 0.7rem 1rem;
-            }
-        }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .admin-match-card {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .admin-actions {
-                width: 100%;
             }
         }
     </style>
@@ -1482,6 +1658,15 @@
                     </div>
 
                     <div class="input-group">
+                        <label for="registerPhone">📱 Contact Number</label>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <span style="padding: 0.9rem 1rem; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,165,0,0.3); border-radius: 10px; font-weight: 600; color: rgba(255,255,255,0.9); white-space: nowrap;">+960</span>
+                            <input type="tel" id="registerPhone" placeholder="7654321" maxlength="7" pattern="[0-9]{7}" style="flex: 1;">
+                        </div>
+                        <small style="color: var(--text-gray); margin-top: 0.3rem; display: block;">7 digits only (e.g., 7654321)</small>
+                    </div>
+
+                    <div class="input-group">
                         <label for="registerPassword">🔐 Password</label>
                         <input type="password" id="registerPassword" placeholder="Create a password">
                     </div>
@@ -1515,8 +1700,13 @@
     <!-- MAIN APPLICATION -->
     <div id="mainApp" class="hidden">
         <div class="header">
-            <h1>🏏 T20 World Cup 2026</h1>
-            <div class="subtitle">Villa Hakatha Prediction League</div>
+            <div class="header-left">
+                <img src="t20-worldcup-logo.png" alt="T20 World Cup 2026" class="header-logo" onerror="this.style.display='none';">
+                <div class="header-text">
+                    <h1>T20 World Cup 2026</h1>
+                    <div class="subtitle">Villa Hakatha Prediction League | <a href="#" onclick="showHowItWorks(); return false;" style="color: #ffd700; text-decoration: none;">How it works?</a> | <a href="https://t.me/+2Z7FQh3yg-o5OTRl" target="_blank" style="color: #0088cc; text-decoration: none;">📢 Telegram</a></div>
+                </div>
+            </div>
             <div class="user-info">
                 <span id="adminBadge" class="admin-badge hidden">ADMIN</span>
                 <span id="userDisplay"></span>
@@ -1535,6 +1725,54 @@
         <div class="container">
             <!-- PREDICTIONS TAB -->
             <div id="predictionsTab">
+                <!-- How It Works Notification Box -->
+                <div id="howItWorksBox" class="admin-panel" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 3px solid var(--primary-blue); margin-bottom: 1.5rem; position: relative;">
+                    <button onclick="closeHowItWorks()" style="position: absolute; top: 0.8rem; right: 0.8rem; background: var(--primary-blue); color: white; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; font-weight: bold;">×</button>
+                    <h2 style="color: var(--primary-blue); margin-bottom: 1rem;">🏏 How Predictions Work</h2>
+
+                    <div style="color: var(--text-dark); line-height: 1.6;">
+                        <p style="margin-bottom: 0.8rem;"><strong>Making a Prediction</strong></p>
+                        <ul style="margin-left: 1.2rem; margin-bottom: 1rem;">
+                            <li>Tap on the team you think will win the match</li>
+                            <li>Your selection will be highlighted with a blue border</li>
+                            <li>Tap the same team again to remove your prediction</li>
+                        </ul>
+
+                        <p style="margin-bottom: 0.8rem;"><strong>⏰ Prediction Deadline</strong></p>
+                        <ul style="margin-left: 1.2rem; margin-bottom: 1rem;">
+                            <li>Submit your prediction <strong>at least 30 minutes before</strong> match starts</li>
+                            <li>Once countdown shows less than 30 min, predictions are <strong>locked</strong> (shown in red)</li>
+                        </ul>
+
+                        <p style="margin-bottom: 0.8rem;"><strong>⭐ Points System</strong></p>
+                        <ul style="margin-left: 1.2rem; margin-bottom: 1rem;">
+                            <li>Each match has a point value (1-5 stars) shown on the match card</li>
+                            <li>If your prediction is correct, you earn the match's point value</li>
+                        </ul>
+
+                        <p style="margin-bottom: 0.8rem;"><strong>📊 Leaderboard</strong></p>
+                        <ul style="margin-left: 1.2rem; margin-bottom: 1rem;">
+                            <li>Your total points are displayed on the Leaderboard tab</li>
+                            <li>Rankings sorted by total points (highest first)</li>
+                            <li>If tied, user with more correct predictions ranks higher</li>
+                        </ul>
+
+                        <p style="margin-bottom: 0.8rem;"><strong>🔔 Prediction Status</strong></p>
+                        <ul style="margin-left: 1.2rem; margin-bottom: 1rem;">
+                            <li>⏳ Pending - Match hasn't been played yet</li>
+                            <li>✅ Correct - You predicted correctly (+points)</li>
+                            <li>❌ Incorrect - Wrong prediction (0 points)</li>
+                        </ul>
+
+                        <p style="margin-bottom: 0.8rem;"><strong>💡 Tips</strong></p>
+                        <ul style="margin-left: 1.2rem;">
+                            <li>Check the app daily for new matches</li>
+                            <li>Predict early to avoid missing the deadline</li>
+                            <li>Higher-stakes matches (knockouts) are worth more points!</li>
+                        </ul>
+                    </div>
+                </div>
+
                 <div id="messageContainer"></div>
 
                 <div id="matchesContainer" class="matches-grid"></div>
@@ -1562,7 +1800,6 @@
                                     <th>Rank</th>
                                     <th>Player</th>
                                     <th>Points</th>
-                                    <th>Predictions</th>
                                     <th>Accuracy %</th>
                                     <th id="leaderboardActionsHeader" class="hidden">Actions</th>
                                 </tr>
@@ -1653,6 +1890,14 @@
                         </div>
 
                         <div class="input-group">
+                            <label for="newUserPhone">Contact Number</label>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <span style="padding: 0.9rem 1rem; background: var(--light-blue); border: 2px solid var(--border-gray); border-radius: 10px; font-weight: 600; color: var(--primary-blue); white-space: nowrap;">+960</span>
+                                <input type="tel" id="newUserPhone" placeholder="7654321" maxlength="7" pattern="[0-9]{7}" style="flex: 1;">
+                            </div>
+                        </div>
+
+                        <div class="input-group">
                             <label for="newUserPassword">Password</label>
                             <input type="password" id="newUserPassword" placeholder="Enter password">
                         </div>
@@ -1661,46 +1906,305 @@
                     <button class="btn-success" onclick="addUser()">➕ Add User</button>
                 </div>
 
+                <!-- DATABASE SETUP -->
+                <div class="admin-panel" style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border: 3px solid #28a745;">
+                    <h2>🗄️ Database Setup</h2>
+                    <p style="color: #155724; margin-bottom: 1rem; font-weight: 600;">
+                        ✅ Postgres database connected! Initialize to create tables and enable cross-browser sync.
+                    </p>
+
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                        <button class="btn-success" onclick="initializeDatabase()" style="flex: 1; min-width: 200px;">
+                            🔄 Initialize Database
+                        </button>
+                        <button class="btn-primary" onclick="syncToDatabase()" style="flex: 1; min-width: 200px;">
+                            ☁️ Sync LocalStorage to Database
+                        </button>
+                    </div>
+
+                    <div style="background: white; padding: 1rem; border-radius: 8px;">
+                        <p style="font-size: 0.9rem; color: var(--text-dark);">
+                            <strong>Note:</strong> After initialization, all data will be stored in Postgres and work across all browsers and devices!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- DUPLICATE PHONE CHECK -->
+                <div class="admin-panel" id="duplicatePhonePanel" style="background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%); border: 3px solid #dc3545; display: none;">
+                    <h2>⚠️ Duplicate Phone Numbers</h2>
+                    <p style="color: #721c24; margin-bottom: 1rem; font-weight: 600;">
+                        The following phone numbers are registered to multiple users. Please resolve these duplicates.
+                    </p>
+                    <div id="duplicatePhonesList"></div>
+                </div>
+
+                <!-- DATA BACKUP & RESTORE -->
+                <div class="admin-panel" style="background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%); border: 3px solid #ff9800;">
+                    <h2>💾 Data Backup & Restore</h2>
+                    <p style="color: #856404; margin-bottom: 1rem; font-weight: 600;">
+                        ⚠️ IMPORTANT: Backup your data regularly to prevent data loss!
+                    </p>
+
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                        <button class="btn-success" onclick="exportAllData()" style="flex: 1; min-width: 200px;">
+                            📥 Download Complete Backup
+                        </button>
+                        <button class="btn-primary" onclick="document.getElementById('importFileInput').click()" style="flex: 1; min-width: 200px;">
+                            📤 Restore from Backup
+                        </button>
+                        <button class="btn-danger" onclick="checkDuplicatePhones()" style="flex: 1; min-width: 200px;">
+                            🔍 Check Duplicate Phones
+                        </button>
+                    </div>
+
+                    <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="importAllData(event)">
+
+                    <div style="background: white; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <h4 style="margin-bottom: 0.5rem;">📊 Current Data:</h4>
+                        <div id="dataStats" style="font-family: monospace; color: var(--text-dark);"></div>
+                    </div>
+                </div>
+
                 <!-- Registered Users List -->
                 <div class="admin-panel">
                     <h2>👥 Registered Users</h2>
-                    <div id="usersListContainer"></div>
+                    <div class="table-container">
+                        <div id="usersListContainer"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // ============================================
+        // DATABASE CONFIGURATION
+        // ============================================
+        const USE_DATABASE = true; // Set to true to use Postgres, false for localStorage
+        const API_URL = '/api/db';
+
+        // Database Helper Functions
+        async function dbCall(action, data = {}) {
+            try {
+                const url = `${API_URL}?action=${action}`;
+                const options = {
+                    method: data.method || 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                };
+
+                if (data.method !== 'GET' && Object.keys(data).length > 0) {
+                    options.body = JSON.stringify(data);
+                }
+
+                const response = await fetch(url, options);
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Database error');
+                }
+
+                return result;
+            } catch (error) {
+                console.error('Database call failed:', error);
+                showMessage('Database error: ' + error.message, 'error');
+                throw error;
+            }
+        }
+
+        async function initializeDatabase() {
+            if (!confirm('Initialize database? This will create all tables and set up the admin user.')) {
+                return;
+            }
+
+            try {
+                showMessage('Initializing database...', 'success');
+                await dbCall('init');
+
+                // Load default matches into database
+                await loadDefaultMatchesToDB();
+
+                showMessage('Database initialized successfully! Refreshing page...', 'success');
+                setTimeout(() => location.reload(), 2000);
+            } catch (error) {
+                showMessage('Failed to initialize database: ' + error.message, 'error');
+            }
+        }
+
+        async function loadDefaultMatchesToDB() {
+            for (const fixture of GROUP_STAGE_FIXTURES) {
+                const team1Obj = TEAMS.find(t => t.name === fixture.team1);
+                const team2Obj = TEAMS.find(t => t.name === fixture.team2);
+
+                if (!team1Obj || !team2Obj) continue;
+
+                const matchDateTime = new Date(fixture.date + 'T' + fixture.time);
+                const match = {
+                    id: `fixture_${fixture.date}_${fixture.time}_${team1Obj.code}_${team2Obj.code}`,
+                    team1: team1Obj,
+                    team2: team2Obj,
+                    dateTime: matchDateTime.toISOString(),
+                    stage: 'group',
+                    status: 'upcoming',
+                    winner: null,
+                    points: 1
+                };
+
+                try {
+                    await dbCall('addMatch', { match });
+                } catch (e) {
+                    console.log('Match already exists or error:', e.message);
+                }
+            }
+        }
+
+        // Load shared data (predictions & stats) from database for all users
+        // This ensures leaderboard and user prediction stats show data from all users
+        async function loadSharedDataFromDatabase() {
+            try {
+                console.log('📡 Loading shared data from database...');
+
+                // Load all predictions from database
+                const dbPredictions = await dbCall('getPredictions', { method: 'GET' });
+
+                // Convert database predictions to localStorage format
+                // Database format: [{username, match_id, team, result}, ...]
+                // localStorage format: {username: {matchId: {team, result}}, ...}
+                const predictionsMap = {};
+                for (const pred of dbPredictions) {
+                    if (!predictionsMap[pred.username]) {
+                        predictionsMap[pred.username] = {};
+                    }
+                    predictionsMap[pred.username][pred.match_id] = {
+                        team: pred.team,
+                        result: pred.result
+                    };
+                }
+
+                // Merge with existing localStorage predictions (keep local data for current user)
+                const existingPredictions = getLocalStorage('predictions', {});
+                const mergedPredictions = { ...predictionsMap };
+
+                // If current user has local predictions not in database, keep them
+                if (currentUser && existingPredictions[currentUser.username]) {
+                    mergedPredictions[currentUser.username] = {
+                        ...mergedPredictions[currentUser.username],
+                        ...existingPredictions[currentUser.username]
+                    };
+                }
+
+                setLocalStorage('predictions', mergedPredictions);
+                console.log(`✅ Loaded predictions for ${Object.keys(predictionsMap).length} users`);
+
+                // Calculate stats for ALL users who have predictions
+                // This ensures everyone who made a prediction appears on the leaderboard
+                const matches = getLocalStorage('matches', []);
+                const calculatedStats = {};
+
+                for (const username in mergedPredictions) {
+                    const userPreds = mergedPredictions[username];
+                    let total = 0;
+                    let correct = 0;
+                    let points = 0;
+
+                    for (const matchId in userPreds) {
+                        total++;
+                        if (userPreds[matchId].result === 'correct') {
+                            correct++;
+                            const match = matches.find(m => m.id === matchId);
+                            const matchPoints = match?.points || 1;
+                            points += matchPoints;
+                        }
+                    }
+
+                    calculatedStats[username] = {
+                        username: username,
+                        totalPredictions: total,
+                        correctPredictions: correct,
+                        points: points,
+                        accuracy: total > 0 ? ((correct / total) * 100).toFixed(1) : 0
+                    };
+                }
+
+                // Also load stats from database and merge (in case there are stats without predictions)
+                try {
+                    const dbStats = await dbCall('getStats', { method: 'GET' });
+                    for (const stat of dbStats) {
+                        if (!calculatedStats[stat.username]) {
+                            calculatedStats[stat.username] = {
+                                username: stat.username,
+                                totalPredictions: stat.total_predictions || 0,
+                                correctPredictions: stat.correct_predictions || 0,
+                                points: stat.points || 0,
+                                accuracy: stat.accuracy || 0
+                            };
+                        }
+                    }
+                } catch (e) {
+                    console.log('Could not load stats from database:', e.message);
+                }
+
+                setLocalStorage('userStats', calculatedStats);
+                console.log(`✅ Calculated stats for ${Object.keys(calculatedStats).length} users`);
+
+            } catch (error) {
+                console.log('⚠️ Could not load shared data from database:', error.message);
+                // Continue with local data if database is unavailable
+            }
+        }
+
+        // ============================================
         // T20 World Cup 2026 Teams with Flags and Groups
+        // ============================================
+        // Flag image helper - uses flagcdn.com for reliable cross-device flag display
+        function flagImg(countryCode, size = 40) {
+            return `<img src="https://flagcdn.com/w80/${countryCode}.png" alt="${countryCode}" width="${size}" height="${Math.round(size * 0.75)}" style="border-radius:3px; box-shadow:0 1px 3px rgba(0,0,0,0.2);" onerror="this.style.display='none'; this.nextSibling.style.display='inline';">`;
+        }
+
         const TEAMS = [
             // Group A
-            { name: 'India', flag: '🇮🇳', code: 'IND', group: 'A' },
-            { name: 'Pakistan', flag: '🇵🇰', code: 'PAK', group: 'A' },
-            { name: 'Netherlands', flag: '🇳🇱', code: 'NED', group: 'A' },
-            { name: 'Namibia', flag: '🇳🇦', code: 'NAM', group: 'A' },
-            { name: 'USA', flag: '🇺🇸', code: 'USA', group: 'A' },
+            { name: 'India', flag: flagImg('in'), code: 'IND', group: 'A', countryCode: 'in' },
+            { name: 'Pakistan', flag: flagImg('pk'), code: 'PAK', group: 'A', countryCode: 'pk' },
+            { name: 'Netherlands', flag: flagImg('nl'), code: 'NED', group: 'A', countryCode: 'nl' },
+            { name: 'Namibia', flag: flagImg('na'), code: 'NAM', group: 'A', countryCode: 'na' },
+            { name: 'USA', flag: flagImg('us'), code: 'USA', group: 'A', countryCode: 'us' },
 
             // Group B
-            { name: 'Sri Lanka', flag: '🇱🇰', code: 'SL', group: 'B' },
-            { name: 'Australia', flag: '🇦🇺', code: 'AUS', group: 'B' },
-            { name: 'Zimbabwe', flag: '🇿🇼', code: 'ZIM', group: 'B' },
-            { name: 'Ireland', flag: '🇮🇪', code: 'IRE', group: 'B' },
-            { name: 'Oman', flag: '🇴🇲', code: 'OMA', group: 'B' },
+            { name: 'Sri Lanka', flag: flagImg('lk'), code: 'SL', group: 'B', countryCode: 'lk' },
+            { name: 'Australia', flag: flagImg('au'), code: 'AUS', group: 'B', countryCode: 'au' },
+            { name: 'Zimbabwe', flag: flagImg('zw'), code: 'ZIM', group: 'B', countryCode: 'zw' },
+            { name: 'Ireland', flag: flagImg('ie'), code: 'IRE', group: 'B', countryCode: 'ie' },
+            { name: 'Oman', flag: flagImg('om'), code: 'OMA', group: 'B', countryCode: 'om' },
 
             // Group C
-            { name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', code: 'ENG', group: 'C' },
-            { name: 'West Indies', flag: '🏴‍☠️', code: 'WI', group: 'C' },
-            { name: 'Bangladesh', flag: '🇧🇩', code: 'BAN', group: 'C' },
-            { name: 'Italy', flag: '🇮🇹', code: 'ITA', group: 'C' },
-            { name: 'Nepal', flag: '🇳🇵', code: 'NEP', group: 'C' },
+            { name: 'England', flag: flagImg('gb-eng'), code: 'ENG', group: 'C', countryCode: 'gb-eng' },
+            { name: 'West Indies', flag: '<span style="font-size:inherit;">🏏</span>', code: 'WI', group: 'C', countryCode: 'wi' },
+            { name: 'Scotland', flag: flagImg('gb-sct'), code: 'SCO', group: 'C', countryCode: 'gb-sct' },
+            { name: 'Italy', flag: flagImg('it'), code: 'ITA', group: 'C', countryCode: 'it' },
+            { name: 'Nepal', flag: flagImg('np'), code: 'NEP', group: 'C', countryCode: 'np' },
 
             // Group D
-            { name: 'South Africa', flag: '🇿🇦', code: 'RSA', group: 'D' },
-            { name: 'New Zealand', flag: '🇳🇿', code: 'NZL', group: 'D' },
-            { name: 'Afghanistan', flag: '🇦🇫', code: 'AFG', group: 'D' },
-            { name: 'Canada', flag: '🇨🇦', code: 'CAN', group: 'D' },
-            { name: 'UAE', flag: '🇦🇪', code: 'UAE', group: 'D' }
+            { name: 'South Africa', flag: flagImg('za'), code: 'RSA', group: 'D', countryCode: 'za' },
+            { name: 'New Zealand', flag: flagImg('nz'), code: 'NZL', group: 'D', countryCode: 'nz' },
+            { name: 'Afghanistan', flag: flagImg('af'), code: 'AFG', group: 'D', countryCode: 'af' },
+            { name: 'Canada', flag: flagImg('ca'), code: 'CAN', group: 'D', countryCode: 'ca' },
+            { name: 'UAE', flag: flagImg('ae'), code: 'UAE', group: 'D', countryCode: 'ae' }
         ];
+
+        // Helper to get the correct flag HTML for a team name (handles DB-stored emoji flags)
+        // Map replaced teams so DB data with old names still renders correctly
+        const TEAM_REPLACEMENTS = {
+            'Bangladesh': 'Scotland'
+        };
+
+        function getTeamFlag(teamName) {
+            const resolvedName = TEAM_REPLACEMENTS[teamName] || teamName;
+            const team = TEAMS.find(t => t.name === resolvedName);
+            return team ? team.flag : resolvedName;
+        }
+
+        function resolveTeamName(teamName) {
+            return TEAM_REPLACEMENTS[teamName] || teamName;
+        }
 
         const MATCH_STAGES = [
             { value: 'group', label: 'Group Stage' },
@@ -1717,12 +2221,12 @@
         // T20 World Cup 2026 Group Stage Fixtures (MVT Timings)
         const GROUP_STAGE_FIXTURES = [
             { date: '2026-02-07', time: '10:30', team1: 'Pakistan', team2: 'Netherlands' },
-            { date: '2026-02-07', time: '14:30', team1: 'West Indies', team2: 'Bangladesh' },
+            { date: '2026-02-07', time: '14:30', team1: 'West Indies', team2: 'Scotland' },
             { date: '2026-02-07', time: '18:30', team1: 'India', team2: 'USA' },
             { date: '2026-02-08', time: '10:30', team1: 'New Zealand', team2: 'Afghanistan' },
             { date: '2026-02-08', time: '14:30', team1: 'England', team2: 'Nepal' },
             { date: '2026-02-08', time: '18:30', team1: 'Sri Lanka', team2: 'Ireland' },
-            { date: '2026-02-09', time: '10:30', team1: 'Bangladesh', team2: 'Italy' },
+            { date: '2026-02-09', time: '10:30', team1: 'Scotland', team2: 'Italy' },
             { date: '2026-02-09', time: '14:30', team1: 'Zimbabwe', team2: 'Oman' },
             { date: '2026-02-09', time: '18:30', team1: 'South Africa', team2: 'Canada' },
             { date: '2026-02-10', time: '10:30', team1: 'Netherlands', team2: 'Namibia' },
@@ -1738,7 +2242,7 @@
             { date: '2026-02-13', time: '14:30', team1: 'Canada', team2: 'UAE' },
             { date: '2026-02-13', time: '18:30', team1: 'USA', team2: 'Netherlands' },
             { date: '2026-02-14', time: '10:30', team1: 'Ireland', team2: 'Oman' },
-            { date: '2026-02-14', time: '14:30', team1: 'England', team2: 'Bangladesh' },
+            { date: '2026-02-14', time: '14:30', team1: 'England', team2: 'Scotland' },
             { date: '2026-02-14', time: '18:30', team1: 'New Zealand', team2: 'South Africa' },
             { date: '2026-02-15', time: '10:30', team1: 'West Indies', team2: 'Nepal' },
             { date: '2026-02-15', time: '14:30', team1: 'USA', team2: 'Namibia' },
@@ -1748,7 +2252,7 @@
             { date: '2026-02-16', time: '18:30', team1: 'Australia', team2: 'Sri Lanka' },
             { date: '2026-02-17', time: '10:30', team1: 'New Zealand', team2: 'Canada' },
             { date: '2026-02-17', time: '14:30', team1: 'Ireland', team2: 'Zimbabwe' },
-            { date: '2026-02-17', time: '18:30', team1: 'Bangladesh', team2: 'Nepal' },
+            { date: '2026-02-17', time: '18:30', team1: 'Scotland', team2: 'Nepal' },
             { date: '2026-02-18', time: '10:30', team1: 'South Africa', team2: 'UAE' },
             { date: '2026-02-18', time: '14:30', team1: 'Pakistan', team2: 'Namibia' },
             { date: '2026-02-18', time: '18:30', team1: 'India', team2: 'Netherlands' },
@@ -1863,7 +2367,7 @@
         }
 
         // Login function
-        function login() {
+        async function login() {
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
 
@@ -1872,6 +2376,44 @@
                 return;
             }
 
+            try {
+                // Try database first if enabled
+                if (USE_DATABASE) {
+                    const dbUsers = await dbCall('getUsers');
+                    const user = dbUsers.find(u => u.username === username);
+
+                    if (user && user.password === password) {
+                        // Save to localStorage for offline access
+                        let localUsers = getLocalStorage('users', []);
+                        const existingIndex = localUsers.findIndex(u => u.username === username);
+                        if (existingIndex >= 0) {
+                            localUsers[existingIndex] = {
+                                username: user.username,
+                                phone: user.phone,
+                                password: user.password,
+                                role: user.role,
+                                needsPasswordChange: user.needs_reset
+                            };
+                        } else {
+                            localUsers.push({
+                                username: user.username,
+                                phone: user.phone,
+                                password: user.password,
+                                role: user.role,
+                                needsPasswordChange: user.needs_reset
+                            });
+                        }
+                        setLocalStorage('users', localUsers);
+
+                        proceedWithLogin(user, password);
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.log('Database login failed, trying localStorage:', error);
+            }
+
+            // Fallback to localStorage
             const users = getLocalStorage('users', []);
             const user = users.find(u => u.username === username);
 
@@ -1884,6 +2426,11 @@
                 showError('Invalid username or password!', 'loginError');
                 return;
             }
+
+            proceedWithLogin(user, password);
+        }
+
+        function proceedWithLogin(user, password) {
 
             // Check if user needs to change password
             if (user.needsPasswordChange) {
@@ -1917,13 +2464,19 @@
         }
 
         // Register function
-        function register() {
+        async function register() {
             const username = document.getElementById('registerUsername').value.trim();
+            const phone = document.getElementById('registerPhone').value.trim();
             const password = document.getElementById('registerPassword').value;
             const confirmPassword = document.getElementById('registerConfirmPassword').value;
 
             if (!username || username.length < 3) {
                 showError('Username must be at least 3 characters.', 'registerError');
+                return;
+            }
+
+            if (!phone || phone.length !== 7 || !/^[0-9]{7}$/.test(phone)) {
+                showError('Contact number must be exactly 7 digits.', 'registerError');
                 return;
             }
 
@@ -1937,6 +2490,52 @@
                 return;
             }
 
+            // Check if user exists in database first
+            try {
+                if (USE_DATABASE) {
+                    const dbUsers = await dbCall('getUsers');
+
+                    // Check if username already exists in database
+                    if (dbUsers.find(u => u.username === username)) {
+                        showError('Username already exists!', 'registerError');
+                        return;
+                    }
+
+                    // Check if phone number already exists in database
+                    if (dbUsers.find(u => u.phone === phone)) {
+                        showError('This contact number is already registered!', 'registerError');
+                        return;
+                    }
+
+                    // Add user to database
+                    await dbCall('addUser', {
+                        username: username,
+                        phone: phone,
+                        password: password,
+                        role: 'user',
+                        needsReset: false
+                    });
+
+                    // Also save to localStorage for offline access
+                    const users = getLocalStorage('users', []);
+                    users.push({
+                        username: username,
+                        phone: phone,
+                        password: password,
+                        role: 'user',
+                        needsPasswordChange: false
+                    });
+                    setLocalStorage('users', users);
+
+                    alert('Registration successful! You can now login from any browser.');
+                    showLoginPage();
+                    return;
+                }
+            } catch (error) {
+                console.log('Database registration failed, using localStorage:', error);
+            }
+
+            // Fallback to localStorage only
             const users = getLocalStorage('users', []);
 
             // Check if username already exists
@@ -1945,9 +2544,16 @@
                 return;
             }
 
+            // Check if phone number already exists
+            if (users.find(u => u.phone === phone)) {
+                showError('This contact number is already registered!', 'registerError');
+                return;
+            }
+
             // Add new user
             users.push({
                 username: username,
+                phone: phone,
                 password: password,
                 role: 'user',
                 needsPasswordChange: false
@@ -1989,12 +2595,18 @@
         }
 
         // User Management Functions (Admin only)
-        function addUser() {
+        async function addUser() {
             const username = document.getElementById('newUserUsername').value.trim();
+            const phone = document.getElementById('newUserPhone').value.trim();
             const password = document.getElementById('newUserPassword').value;
 
             if (!username || username.length < 3) {
                 alert('Username must be at least 3 characters.');
+                return;
+            }
+
+            if (!phone || phone.length !== 7 || !/^[0-9]{7}$/.test(phone)) {
+                alert('Contact number must be exactly 7 digits.');
                 return;
             }
 
@@ -2003,50 +2615,84 @@
                 return;
             }
 
-            const users = getLocalStorage('users', []);
+            try {
+                if (USE_DATABASE) {
+                    const dbUsers = await dbCall('getUsers');
 
-            if (users.find(u => u.username === username)) {
-                alert('Username already exists!');
-                return;
+                    if (dbUsers.find(u => u.username === username)) {
+                        alert('Username already exists!');
+                        return;
+                    }
+
+                    if (dbUsers.find(u => u.phone === phone)) {
+                        alert('This contact number is already registered!');
+                        return;
+                    }
+
+                    await dbCall('addUser', {
+                        username: username,
+                        phone: phone,
+                        password: password,
+                        role: 'user',
+                        needsReset: false
+                    });
+                }
+            } catch (error) {
+                console.log('Database addUser failed, using localStorage:', error);
             }
 
-            users.push({
-                username: username,
-                password: password,
-                role: 'user',
-                needsPasswordChange: false
-            });
-            setLocalStorage('users', users);
+            // Also save to localStorage
+            const users = getLocalStorage('users', []);
+            if (!users.find(u => u.username === username)) {
+                users.push({
+                    username: username,
+                    phone: phone,
+                    password: password,
+                    role: 'user',
+                    needsPasswordChange: false
+                });
+                setLocalStorage('users', users);
+            }
 
             document.getElementById('newUserUsername').value = '';
+            document.getElementById('newUserPhone').value = '';
             document.getElementById('newUserPassword').value = '';
 
             alert('User added successfully!');
             renderUsersList();
         }
 
-        function resetUserPassword(username) {
+        async function resetUserPassword(username) {
             if (!confirm(`Reset password for user: ${username}?\n\nThe user will need to change their password on next login.`)) {
                 return;
+            }
+
+            try {
+                if (USE_DATABASE) {
+                    await dbCall('updateUser', {
+                        username: username,
+                        password: DEFAULT_RESET_PASSWORD,
+                        needsReset: true
+                    });
+                }
+            } catch (error) {
+                console.log('Database resetUserPassword failed:', error);
             }
 
             const users = getLocalStorage('users', []);
             const userIndex = users.findIndex(u => u.username === username);
 
-            if (userIndex === -1) {
-                alert('User not found!');
-                return;
+            if (userIndex !== -1) {
+                users[userIndex].password = DEFAULT_RESET_PASSWORD;
+                users[userIndex].needsPasswordChange = true;
+                setLocalStorage('users', users);
             }
-
-            users[userIndex].password = DEFAULT_RESET_PASSWORD;
-            users[userIndex].needsPasswordChange = true;
-            setLocalStorage('users', users);
 
             alert(`Password reset successfully!\n\nDefault password: ${DEFAULT_RESET_PASSWORD}\n\nUser will be prompted to change it on next login.`);
             renderUsersList();
         }
 
-        function deleteUser(username) {
+        async function deleteUser(username) {
             if (username === ADMIN_USERNAME) {
                 alert('Cannot delete admin user!');
                 return;
@@ -2054,6 +2700,14 @@
 
             if (!confirm(`Delete user: ${username}?\n\nThis action cannot be undone. This will also delete all predictions and stats for this user.`)) {
                 return;
+            }
+
+            try {
+                if (USE_DATABASE) {
+                    await dbCall('deleteUser', { username: username });
+                }
+            } catch (error) {
+                console.log('Database deleteUser failed:', error);
             }
 
             // Remove user from users list
@@ -2079,8 +2733,28 @@
             updateLeaderboard();
         }
 
-        function renderUsersList() {
-            const users = getLocalStorage('users', []);
+        async function renderUsersList() {
+            let users = getLocalStorage('users', []);
+
+            // Fetch from database to get users created on other devices
+            if (USE_DATABASE) {
+                try {
+                    const dbUsers = await dbCall('getUsers');
+                    if (dbUsers && dbUsers.length > 0) {
+                        // Update localStorage with database users
+                        users = dbUsers.map(u => ({
+                            username: u.username,
+                            phone: u.phone,
+                            password: u.password,
+                            role: u.role,
+                            needsPasswordChange: u.needs_reset
+                        }));
+                        setLocalStorage('users', users);
+                    }
+                } catch (error) {
+                    console.log('Failed to fetch users from database, using localStorage:', error);
+                }
+            }
             const container = document.getElementById('usersListContainer');
 
             if (users.length === 0) {
@@ -2093,6 +2767,7 @@
                     <thead>
                         <tr>
                             <th>Username</th>
+                            <th>Contact</th>
                             <th>Role</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -2102,6 +2777,7 @@
                         ${users.map(user => `
                             <tr>
                                 <td><strong>${user.username}</strong></td>
+                                <td>${user.phone ? '+960 ' + user.phone : '-'}</td>
                                 <td>
                                     <span class="user-badge ${user.role}">
                                         ${user.role === 'admin' ? '👑 ADMIN' : '👤 USER'}
@@ -2130,7 +2806,7 @@
             `;
         }
 
-        function initializeApp() {
+        async function initializeApp() {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('registerPage').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
@@ -2157,8 +2833,77 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-btn')[0].classList.add('active'); // First tab is Match Predictions
 
+            // Show/hide "How It Works" box based on user preference
+            const howItWorksClosed = getLocalStorage('howItWorksClosed', false);
+            const howItWorksBox = document.getElementById('howItWorksBox');
+            if (howItWorksClosed) {
+                howItWorksBox.style.display = 'none';
+            } else {
+                howItWorksBox.style.display = 'block';
+            }
+
+            // Sync current user's local predictions to database (for users who predicted before sync was added)
+            await syncCurrentUserPredictionsToDatabase();
+
+            // Load shared data from database for leaderboard and prediction stats
+            await loadSharedDataFromDatabase();
+
             renderMatches();
             updateLeaderboard();
+        }
+
+        // Sync current user's predictions from localStorage to database
+        // This ensures predictions made before database sync was added get uploaded
+        async function syncCurrentUserPredictionsToDatabase() {
+            if (!currentUser || isAdmin) return;
+
+            const predictions = getLocalStorage('predictions', {});
+            const userPredictions = predictions[currentUser.username];
+
+            if (!userPredictions || Object.keys(userPredictions).length === 0) {
+                console.log('No local predictions to sync for', currentUser.username);
+                return;
+            }
+
+            console.log(`📤 Syncing ${Object.keys(userPredictions).length} predictions for ${currentUser.username} to database...`);
+
+            for (const matchId in userPredictions) {
+                const pred = userPredictions[matchId];
+                try {
+                    await dbCall('savePrediction', {
+                        username: currentUser.username,
+                        matchId: matchId,
+                        team: pred.team,
+                        result: pred.result || null
+                    });
+                } catch (e) {
+                    console.log('Could not sync prediction:', e.message);
+                }
+            }
+
+            // Also sync user stats
+            const stats = getLocalStorage('userStats', {});
+            const userStat = stats[currentUser.username];
+            if (userStat) {
+                try {
+                    await dbCall('updateStats', { stats: [userStat] });
+                } catch (e) {
+                    console.log('Could not sync stats:', e.message);
+                }
+            }
+
+            console.log(`✅ Synced predictions for ${currentUser.username}`);
+        }
+
+        // How It Works functions
+        function closeHowItWorks() {
+            document.getElementById('howItWorksBox').style.display = 'none';
+            setLocalStorage('howItWorksClosed', true);
+        }
+
+        function showHowItWorks() {
+            document.getElementById('howItWorksBox').style.display = 'block';
+            setLocalStorage('howItWorksClosed', false);
         }
 
         // Tab Navigation
@@ -2214,7 +2959,8 @@
                     dateTime: matchDateTime.toISOString(),
                     stage: 'group',
                     status: 'upcoming',
-                    winner: null
+                    winner: null,
+                    points: 1 // Default points for match
                 };
 
                 existingMatches.push(newMatch);
@@ -2258,7 +3004,8 @@
                 dateTime: matchDateTime.toISOString(),
                 stage: stage,
                 status: 'upcoming',
-                winner: null
+                winner: null,
+                points: 1 // Default points
             };
 
             matches.push(newMatch);
@@ -2279,8 +3026,17 @@
             renderMatches();
         }
 
-        function deleteMatch(matchId) {
+        async function deleteMatch(matchId) {
             if (!confirm('Are you sure you want to delete this match?')) return;
+
+            // Delete from database
+            if (USE_DATABASE) {
+                try {
+                    await dbCall('deleteMatch', { matchId: matchId });
+                } catch (error) {
+                    console.log('Failed to delete match from database:', error);
+                }
+            }
 
             let matches = getLocalStorage('matches', []);
             matches = matches.filter(m => m.id !== matchId);
@@ -2291,7 +3047,7 @@
             renderMatches();
         }
 
-        function setMatchResult(matchId, winnerTeamName) {
+        async function setMatchResult(matchId, winnerTeamName) {
             const matches = getLocalStorage('matches', []);
             const match = matches.find(m => m.id === matchId);
 
@@ -2300,8 +3056,47 @@
                 match.winner = winnerTeamName;
                 setLocalStorage('matches', matches);
 
+                // Update database
+                if (USE_DATABASE) {
+                    try {
+                        await dbCall('updateMatch', {
+                            matchId: matchId,
+                            status: 'completed',
+                            winner: winnerTeamName,
+                            points: match.points || 1
+                        });
+                    } catch (error) {
+                        console.log('Failed to update match in database:', error);
+                    }
+                }
+
                 // Update all predictions for this match
-                updatePredictionResults(matchId, winnerTeamName);
+                await updatePredictionResults(matchId, winnerTeamName);
+
+                // Send Telegram notification (fire-and-forget)
+                if (USE_DATABASE) {
+                    try {
+                        const stats = getLocalStorage('userStats', {});
+                        const leaderboardTop = Object.values(stats)
+                            .filter(u => u.username !== 'admin')
+                            .sort((a, b) => b.points - a.points || b.correctPredictions - a.correctPredictions)
+                            .slice(0, 3)
+                            .map(u => ({ username: u.username, points: u.points || 0 }));
+
+                        dbCall('sendTelegram', {
+                            matchDetails: {
+                                team1: match.team1.name,
+                                team1Flag: getTeamFlag(match.team1.name),
+                                team2: match.team2.name,
+                                team2Flag: getTeamFlag(match.team2.name),
+                                winner: winnerTeamName
+                            },
+                            leaderboardTop
+                        });
+                    } catch (e) {
+                        console.log('Telegram notification failed:', e.message);
+                    }
+                }
 
                 showMessage('Result saved!', 'success');
                 renderAdminMatches();
@@ -2309,7 +3104,7 @@
             }
         }
 
-        function resetMatchResult(matchId) {
+        async function resetMatchResult(matchId) {
             if (!confirm('Reset this match result? This will revert it to upcoming status and recalculate all user points.')) {
                 return;
             }
@@ -2325,6 +3120,20 @@
                 match.winner = null;
                 setLocalStorage('matches', matches);
 
+                // Update database
+                if (USE_DATABASE) {
+                    try {
+                        await dbCall('updateMatch', {
+                            matchId: matchId,
+                            status: 'upcoming',
+                            winner: null,
+                            points: match.points || 1
+                        });
+                    } catch (error) {
+                        console.log('Failed to reset match in database:', error);
+                    }
+                }
+
                 // Revert all predictions for this match
                 revertPredictionResults(matchId, previousWinner);
 
@@ -2335,7 +3144,39 @@
             }
         }
 
-        function revertPredictionResults(matchId, previousWinner) {
+        async function setMatchPoints(matchId, points) {
+            const matches = getLocalStorage('matches', []);
+            const match = matches.find(m => m.id === matchId);
+
+            if (match) {
+                match.points = points;
+                setLocalStorage('matches', matches);
+
+                // Update database
+                if (USE_DATABASE) {
+                    try {
+                        await dbCall('updateMatch', {
+                            matchId: matchId,
+                            status: match.status || 'upcoming',
+                            winner: match.winner || null,
+                            points: points
+                        });
+                    } catch (error) {
+                        console.log('Failed to update match points in database:', error);
+                    }
+                }
+
+                // Recalculate all user stats with new points
+                updateAllUserStats();
+
+                showMessage(`Match points updated to ${points}!`, 'success');
+                renderAdminMatches();
+                renderMatches();
+                updateLeaderboard();
+            }
+        }
+
+        async function revertPredictionResults(matchId, previousWinner) {
             const predictions = getLocalStorage('predictions', {});
             const userStats = getLocalStorage('userStats', {});
 
@@ -2352,14 +3193,36 @@
 
                     // Reset prediction result
                     prediction.result = null;
+
+                    // Sync reverted prediction to database
+                    try {
+                        await dbCall('savePrediction', {
+                            username: username,
+                            matchId: matchId,
+                            team: prediction.team,
+                            result: null
+                        });
+                    } catch (e) {
+                        console.log('Could not sync reverted prediction to database:', e.message);
+                    }
                 }
             }
 
             setLocalStorage('predictions', predictions);
             setLocalStorage('userStats', userStats);
+
+            // Sync all stats to database
+            try {
+                const statsArray = Object.values(userStats);
+                if (statsArray.length > 0) {
+                    await dbCall('updateStats', { stats: statsArray });
+                }
+            } catch (e) {
+                console.log('Could not sync stats to database:', e.message);
+            }
         }
 
-        function updatePredictionResults(matchId, winner) {
+        async function updatePredictionResults(matchId, winner) {
             const predictions = getLocalStorage('predictions', {});
 
             for (let username in predictions) {
@@ -2376,16 +3239,50 @@
                     } else {
                         prediction.result = 'incorrect';
                     }
+
+                    // Sync prediction result to database
+                    try {
+                        await dbCall('savePrediction', {
+                            username: username,
+                            matchId: matchId,
+                            team: prediction.team,
+                            result: prediction.result
+                        });
+                    } catch (e) {
+                        console.log('Could not sync prediction result to database:', e.message);
+                    }
                 }
             }
 
             setLocalStorage('predictions', predictions);
-            updateAllUserStats();
+            await updateAllUserStats();
         }
 
-        function renderAdminMatches() {
-            const matches = getLocalStorage('matches', []);
+        async function renderAdminMatches() {
+            let matches = getLocalStorage('matches', []);
             const container = document.getElementById('adminMatchesList');
+
+            // Fetch matches from database for cross-device sync
+            if (USE_DATABASE) {
+                try {
+                    const dbMatches = await dbCall('getMatches');
+                    if (dbMatches && dbMatches.length > 0) {
+                        matches = dbMatches.map(m => ({
+                            id: m.id,
+                            team1: { name: resolveTeamName(m.team1_name), flag: m.team1_flag, code: m.team1_code, group: m.team1_group },
+                            team2: { name: resolveTeamName(m.team2_name), flag: m.team2_flag, code: m.team2_code, group: m.team2_group },
+                            dateTime: m.date_time,
+                            stage: m.stage,
+                            status: m.status,
+                            winner: m.winner,
+                            points: m.points
+                        }));
+                        setLocalStorage('matches', matches);
+                    }
+                } catch (error) {
+                    console.log('Failed to fetch matches from database, using localStorage:', error);
+                }
+            }
 
             if (matches.length === 0) {
                 container.innerHTML = '<div class="empty-state"><p>No matches scheduled yet</p></div>';
@@ -2396,22 +3293,34 @@
                 <div class="admin-match-card">
                     <div class="admin-match-info">
                         <div class="admin-match-teams">
-                            ${match.team1.flag} ${match.team1.name} vs ${match.team2.flag} ${match.team2.name}
+                            ${getTeamFlag(match.team1.name)} ${match.team1.name} vs ${getTeamFlag(match.team2.name)} ${match.team2.name}
                         </div>
                         <div class="admin-match-details">
                             ${getStageLabel(match.stage)} | 📅 ${formatDateTime(match.dateTime)} |
                             Status: ${match.status === 'completed' ? '✅ Completed' : '⏳ Upcoming'}
                             ${match.winner ? ` | Winner: ${match.winner}` : ''}
                         </div>
+                        <div class="result-selector" style="background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%); border: 2px solid #ffa500;">
+                            <strong>⭐ Match Points:</strong>
+                            <div class="result-buttons">
+                                ${[1, 2, 3, 4, 5].map(pts => `
+                                    <button class="result-btn ${(match.points || 1) === pts ? 'selected' : ''}"
+                                            onclick="setMatchPoints('${match.id}', ${pts})"
+                                            style="font-weight: 700;">
+                                        ${pts} ${pts === 1 ? 'Point' : 'Points'}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
                         ${match.status === 'upcoming' ? `
                             <div class="result-selector">
                                 <strong>Set Winner:</strong>
                                 <div class="result-buttons">
                                     <button class="result-btn" onclick="setMatchResult('${match.id}', '${match.team1.name}')">
-                                        ${match.team1.flag} ${match.team1.name}
+                                        ${getTeamFlag(match.team1.name)} ${match.team1.name}
                                     </button>
                                     <button class="result-btn" onclick="setMatchResult('${match.id}', '${match.team2.name}')">
-                                        ${match.team2.flag} ${match.team2.name}
+                                        ${getTeamFlag(match.team2.name)} ${match.team2.name}
                                     </button>
                                 </div>
                             </div>
@@ -2428,10 +3337,33 @@
         }
 
         // Render Matches (User View)
-        function renderMatches() {
-            const matches = getLocalStorage('matches', []);
+        async function renderMatches() {
+            let matches = getLocalStorage('matches', []);
             const container = document.getElementById('matchesContainer');
             const noMatchesMsg = document.getElementById('noMatchesMsg');
+
+            // Fetch matches from database for cross-device sync
+            if (USE_DATABASE) {
+                try {
+                    const dbMatches = await dbCall('getMatches');
+                    if (dbMatches && dbMatches.length > 0) {
+                        matches = dbMatches.map(m => ({
+                            id: m.id,
+                            team1: { name: resolveTeamName(m.team1_name), flag: m.team1_flag, code: m.team1_code, group: m.team1_group },
+                            team2: { name: resolveTeamName(m.team2_name), flag: m.team2_flag, code: m.team2_code, group: m.team2_group },
+                            dateTime: m.date_time,
+                            stage: m.stage,
+                            status: m.status,
+                            winner: m.winner,
+                            points: m.points
+                        }));
+                        setLocalStorage('matches', matches);
+                    }
+                } catch (error) {
+                    console.log('Failed to fetch matches from database, using localStorage:', error);
+                }
+            }
+
             const predictions = getLocalStorage('predictions', {});
             const userPredictions = predictions[currentUser?.username] || {};
 
@@ -2450,20 +3382,27 @@
                 const isLocked = timeUntilMatch < (30 * 60 * 1000); // 30 minutes
                 const isCompleted = match.status === 'completed';
                 const userPrediction = userPredictions[match.id];
+                const matchPoints = match.points || 1;
+
+                // Calculate prediction statistics for this match
+                const predictionStats = calculateMatchPredictionStats(match.id, predictions);
 
                 return `
                     <div class="match-card">
                         <div class="match-header">
-                            <span class="match-status-badge ${isCompleted ? 'badge-completed' : 'badge-upcoming'}">
-                                ${getStageLabel(match.stage || 'group')}
-                            </span>
-                            <span class="match-time">${formatDate(matchDate)}</span>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                                <span class="match-status-badge ${isCompleted ? 'badge-completed' : 'badge-upcoming'}">
+                                    ${getStageLabel(match.stage || 'group')}
+                                </span>
+                                <span class="match-points-badge">⭐${matchPoints}</span>
+                                <span class="match-time">${formatDate(matchDate)}</span>
+                            </div>
                         </div>
 
                         <div class="teams-container">
                             <div class="team ${userPrediction && userPrediction.team === match.team1.name ? 'selected' : ''} ${isLocked || isCompleted ? 'disabled' : ''}"
                                  onclick="${!isLocked && !isCompleted && !isAdmin ? `predictWinner('${match.id}', '${match.team1.name}')` : ''}">
-                                <div class="team-flag">${match.team1.flag}</div>
+                                <div class="team-flag">${getTeamFlag(match.team1.name)}</div>
                                 <div class="team-name">${match.team1.name}</div>
                                 <div class="team-code" style="font-size: 0.85rem; color: var(--text-gray);">
                                     ${getTeamGroup(match.team1.name)}
@@ -2474,7 +3413,7 @@
 
                             <div class="team ${userPrediction && userPrediction.team === match.team2.name ? 'selected' : ''} ${isLocked || isCompleted ? 'disabled' : ''}"
                                  onclick="${!isLocked && !isCompleted && !isAdmin ? `predictWinner('${match.id}', '${match.team2.name}')` : ''}">
-                                <div class="team-flag">${match.team2.flag}</div>
+                                <div class="team-flag">${getTeamFlag(match.team2.name)}</div>
                                 <div class="team-name">${match.team2.name}</div>
                                 <div class="team-code" style="font-size: 0.85rem; color: var(--text-gray);">
                                     ${getTeamGroup(match.team2.name)}
@@ -2482,10 +3421,27 @@
                             </div>
                         </div>
 
+                        ${predictionStats.totalPredictions > 0 ? `
+                            <div class="user-predictor-box">
+                                <div class="user-predictor-title">👥 User Predictions</div>
+                                <div class="user-predictor-stats">
+                                    <div class="predictor-team">
+                                        <span class="predictor-team-name">${match.team1.name}</span>
+                                        <span class="predictor-team-percent">${predictionStats.team1Percent}%</span>
+                                    </div>
+                                    <div class="predictor-divider">|</div>
+                                    <div class="predictor-team">
+                                        <span class="predictor-team-name">${match.team2.name}</span>
+                                        <span class="predictor-team-percent">${predictionStats.team2Percent}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ` : ''}
+
                         ${!isCompleted && timeUntilMatch > 0 ? `
-                            <div class="countdown ${isLocked ? '' : ''}">
-                                <div class="countdown-label">${isLocked ? '🔒 Predictions Locked' : '⏰ Time to Predict'}</div>
-                                <div class="countdown-time">${formatCountdown(timeUntilMatch)}</div>
+                            <div class="prediction-stat-box" style="${isLocked ? 'background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);' : 'background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);'} width: 100%; padding: 1rem; color: white; border-radius: 10px; text-align: center; margin: 1rem 0;">
+                                <div class="prediction-stat-label">${isLocked ? '🔒 Locked' : '⏰ Time Left'}</div>
+                                <div class="prediction-stat-value">${formatCountdown(timeUntilMatch)}</div>
                             </div>
                         ` : ''}
 
@@ -2506,7 +3462,7 @@
         }
 
         // Prediction System
-        function predictWinner(matchId, teamName) {
+        async function predictWinner(matchId, teamName) {
             if (isAdmin) {
                 showMessage('Admin cannot make predictions!', 'warning');
                 return;
@@ -2543,6 +3499,17 @@
                 setLocalStorage('predictions', predictions);
                 updateUserStats();
                 renderMatches();
+
+                // Sync deletion to database
+                try {
+                    await dbCall('deletePrediction', {
+                        username: currentUser.username,
+                        matchId: matchId
+                    });
+                } catch (e) {
+                    console.log('Could not sync prediction deletion to database:', e.message);
+                }
+
                 showMessage('Prediction removed!', 'success');
                 return;
             }
@@ -2558,13 +3525,26 @@
             updateUserStats();
             renderMatches();
 
+            // Sync prediction to database
+            try {
+                await dbCall('savePrediction', {
+                    username: currentUser.username,
+                    matchId: matchId,
+                    team: teamName,
+                    result: 'pending'
+                });
+            } catch (e) {
+                console.log('Could not sync prediction to database:', e.message);
+            }
+
             showMessage(`Prediction saved! You picked ${teamName} to win.`, 'success');
         }
 
         // User Stats
-        function updateUserStats() {
+        async function updateUserStats() {
             const predictions = getLocalStorage('predictions', {});
             const userPredictions = predictions[currentUser.username] || {};
+            const matches = getLocalStorage('matches', []);
 
             let total = 0;
             let correct = 0;
@@ -2574,12 +3554,14 @@
                 total++;
                 if (userPredictions[matchId].result === 'correct') {
                     correct++;
-                    points++; // 1 point per correct prediction
+                    // Get match points value (default to 1 if not set)
+                    const match = matches.find(m => m.id === matchId);
+                    const matchPoints = match?.points || 1;
+                    points += matchPoints;
                 }
             }
 
-            const stats = getLocalStorage('userStats', {});
-            stats[currentUser.username] = {
+            const userStat = {
                 username: currentUser.username,
                 totalPredictions: total,
                 correctPredictions: correct,
@@ -2587,12 +3569,22 @@
                 accuracy: total > 0 ? ((correct / total) * 100).toFixed(1) : 0
             };
 
+            const stats = getLocalStorage('userStats', {});
+            stats[currentUser.username] = userStat;
             setLocalStorage('userStats', stats);
+
+            // Sync stats to database
+            try {
+                await dbCall('updateStats', { stats: [userStat] });
+            } catch (e) {
+                console.log('Could not sync stats to database:', e.message);
+            }
         }
 
-        function updateAllUserStats() {
+        async function updateAllUserStats() {
             const predictions = getLocalStorage('predictions', {});
             const stats = getLocalStorage('userStats', {});
+            const matches = getLocalStorage('matches', []);
 
             for (let username in predictions) {
                 const userPredictions = predictions[username];
@@ -2604,7 +3596,10 @@
                     total++;
                     if (userPredictions[matchId].result === 'correct') {
                         correct++;
-                        points++;
+                        // Get match points value (default to 1 if not set)
+                        const match = matches.find(m => m.id === matchId);
+                        const matchPoints = match?.points || 1;
+                        points += matchPoints;
                     }
                 }
 
@@ -2619,6 +3614,16 @@
             }
 
             setLocalStorage('userStats', stats);
+
+            // Sync all stats to database
+            try {
+                const statsArray = Object.values(stats);
+                if (statsArray.length > 0) {
+                    await dbCall('updateStats', { stats: statsArray });
+                }
+            } catch (e) {
+                console.log('Could not sync stats to database:', e.message);
+            }
         }
 
         // Leaderboard
@@ -2639,7 +3644,7 @@
             }
 
             if (leaderboardData.length === 0) {
-                const colspan = isAdmin ? '6' : '5';
+                const colspan = isAdmin ? '5' : '4';
                 tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align: center; padding: 2rem;">No predictions yet. Start predicting!</td></tr>`;
                 return;
             }
@@ -2658,7 +3663,6 @@
                         <td><span class="rank-badge ${rankBadgeClass}">${rank}</span></td>
                         <td><strong>${user.username}</strong> ${isCurrentUser ? '(You)' : ''}</td>
                         <td><strong style="color: var(--success-green); font-size: 1.3rem;">${user.points}</strong></td>
-                        <td>${user.totalPredictions}</td>
                         <td>${user.accuracy}%</td>
                         ${isAdmin ? `
                             <td>
@@ -2716,6 +3720,42 @@
             }
 
             return `${hours}h ${minutes}m`;
+        }
+
+        function calculateMatchPredictionStats(matchId, allPredictions) {
+            let team1Count = 0;
+            let team2Count = 0;
+            let totalPredictions = 0;
+
+            // Get the match to know team names
+            const matches = getLocalStorage('matches', []);
+            const match = matches.find(m => m.id === matchId);
+            if (!match) return { team1Count: 0, team2Count: 0, totalPredictions: 0, team1Percent: 0, team2Percent: 0 };
+
+            // Count predictions for each team
+            Object.values(allPredictions).forEach(userPredictions => {
+                const prediction = userPredictions[matchId];
+                if (prediction) {
+                    totalPredictions++;
+                    if (prediction.team === match.team1.name) {
+                        team1Count++;
+                    } else if (prediction.team === match.team2.name) {
+                        team2Count++;
+                    }
+                }
+            });
+
+            // Calculate percentages
+            const team1Percent = totalPredictions > 0 ? Math.round((team1Count / totalPredictions) * 100) : 0;
+            const team2Percent = totalPredictions > 0 ? Math.round((team2Count / totalPredictions) * 100) : 0;
+
+            return {
+                team1Count,
+                team2Count,
+                totalPredictions,
+                team1Percent,
+                team2Percent
+            };
         }
 
         function getPredictionStatusText(prediction, matchEnded, winner) {
@@ -2776,6 +3816,195 @@
                 initializeApp();
             }
         });
+
+        // ============================================
+        // DATA BACKUP & RESTORE FUNCTIONS
+        // ============================================
+
+        async function syncToDatabase() {
+            if (!confirm('Sync all localStorage data to database? This will upload all users, predictions, matches, and stats.')) {
+                return;
+            }
+
+            try {
+                showMessage('Syncing to database...', 'success');
+
+                // Sync users
+                const users = getLocalStorage('users', []);
+                for (const user of users) {
+                    try {
+                        await dbCall('addUser', {
+                            username: user.username,
+                            phone: user.phone,
+                            password: user.password,
+                            role: user.role,
+                            needsReset: user.needsPasswordChange || false
+                        });
+                    } catch (e) {
+                        console.log(`User ${user.username} already exists or error:`, e.message);
+                    }
+                }
+
+                // Sync matches
+                const matches = getLocalStorage('matches', []);
+                for (const match of matches) {
+                    try {
+                        await dbCall('addMatch', { match });
+                    } catch (e) {
+                        console.log(`Match ${match.id} already exists or error:`, e.message);
+                    }
+                }
+
+                // Sync predictions
+                const predictions = getLocalStorage('predictions', {});
+                for (const username in predictions) {
+                    const userPreds = predictions[username];
+                    for (const matchId in userPreds) {
+                        const pred = userPreds[matchId];
+                        try {
+                            await dbCall('savePrediction', {
+                                username,
+                                matchId,
+                                team: pred.team,
+                                result: pred.result || null
+                            });
+                        } catch (e) {
+                            console.log(`Prediction error:`, e.message);
+                        }
+                    }
+                }
+
+                // Sync stats
+                const stats = getLocalStorage('userStats', {});
+                const statsArray = Object.values(stats);
+                if (statsArray.length > 0) {
+                    await dbCall('updateStats', { stats: statsArray });
+                }
+
+                showMessage('✅ Successfully synced all data to database!', 'success');
+            } catch (error) {
+                showMessage('Sync failed: ' + error.message, 'error');
+            }
+        }
+
+        function exportAllData() {
+            const allData = {
+                users: getLocalStorage('users', []),
+                predictions: getLocalStorage('predictions', {}),
+                userStats: getLocalStorage('userStats', {}),
+                matches: getLocalStorage('matches', []),
+                exportDate: new Date().toISOString(),
+                appVersion: '1.0'
+            };
+
+            const dataStr = JSON.stringify(allData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `t20-worldcup-backup-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            alert('✅ Backup downloaded successfully!\n\nSave this file in a safe place (Google Drive, Dropbox, etc.)');
+        }
+
+        function importAllData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!confirm('⚠️ WARNING: This will REPLACE all current data with the backup file.\n\nMake sure you have a current backup before proceeding.\n\nContinue?')) {
+                event.target.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    // Validate data structure
+                    if (!data.users || !Array.isArray(data.users)) {
+                        throw new Error('Invalid backup file: Missing users data');
+                    }
+
+                    // Restore all data
+                    setLocalStorage('users', data.users);
+                    setLocalStorage('predictions', data.predictions || {});
+                    setLocalStorage('userStats', data.userStats || {});
+                    setLocalStorage('matches', data.matches || []);
+
+                    alert(`✅ Data restored successfully!\n\nRestored:\n- ${data.users.length} users\n- ${Object.keys(data.predictions || {}).length} prediction sets\n- ${data.matches?.length || 0} matches\n\nPage will refresh...`);
+
+                    location.reload();
+                } catch (error) {
+                    alert(`❌ Error restoring backup:\n${error.message}\n\nPlease check the backup file and try again.`);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function updateDataStats() {
+            const users = getLocalStorage('users', []);
+            const predictions = getLocalStorage('predictions', {});
+            const matches = getLocalStorage('matches', []);
+            const userStats = getLocalStorage('userStats', {});
+
+            const statsContainer = document.getElementById('dataStats');
+            if (statsContainer) {
+                statsContainer.innerHTML = `
+                    👥 Users: <strong>${users.length}</strong><br>
+                    🎯 Total Predictions: <strong>${Object.keys(predictions).length}</strong><br>
+                    ⚽ Matches: <strong>${matches.length}</strong><br>
+                    📊 User Stats: <strong>${Object.keys(userStats).length}</strong><br>
+                    📅 Last Update: <strong>${new Date().toLocaleString()}</strong>
+                `;
+            }
+        }
+
+        // Check for duplicate phone numbers
+        async function checkDuplicatePhones() {
+            const panel = document.getElementById('duplicatePhonePanel');
+            const list = document.getElementById('duplicatePhonesList');
+
+            if (!USE_DATABASE) {
+                alert('Database mode is not enabled.');
+                return;
+            }
+
+            try {
+                const duplicates = await dbCall('getDuplicatePhones');
+
+                if (duplicates.length === 0) {
+                    panel.style.display = 'none';
+                    alert('✅ No duplicate phone numbers found!');
+                    return;
+                }
+
+                panel.style.display = 'block';
+                list.innerHTML = duplicates.map(dup => `
+                    <div style="background: white; padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem;">
+                        <strong>📱 +960 ${dup.phone}</strong> - Used by ${dup.count} users:<br>
+                        <span style="color: #721c24;">${dup.usernames.join(', ')}</span>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                alert('Error checking duplicates: ' + error.message);
+            }
+        }
+
+        // Update stats when users tab is shown
+        const originalShowTab = window.showTab;
+        window.showTab = function(tabName) {
+            if (originalShowTab) originalShowTab(tabName);
+            if (tabName === 'users') {
+                updateDataStats();
+            }
+        };
     </script>
 </body>
 </html>

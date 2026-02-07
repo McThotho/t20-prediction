@@ -1,0 +1,8 @@
+{
+  "name": "t20-world-cup-prediction",
+  "version": "1.0.0",
+  "description": "T20 World Cup 2026 Prediction App",
+  "dependencies": {
+    "@neondatabase/serverless": "^0.9.0"
+  }
+}
