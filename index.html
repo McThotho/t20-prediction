@@ -1204,6 +1204,43 @@
             border-color: var(--primary-blue);
         }
 
+        .tg-update-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+        }
+
+        .tg-update-section strong {
+            color: #2e7d32;
+        }
+
+        .tg-update-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tg-btn {
+            padding: 0.5rem 0.8rem;
+            border: 2px solid #a5d6a7;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .tg-btn:hover {
+            background: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+
         .success-message, .error-message, .warning-message {
             padding: 1.5rem;
             border-radius: 12px;
@@ -1871,6 +1908,16 @@
                     <button class="btn-success" onclick="addMatch()">➕ Add Match</button>
                 </div>
 
+                <!-- Push Link to Telegram -->
+                <div class="admin-panel" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border: 2px solid #4caf50;">
+                    <h2 style="color: #2e7d32;">📢 Push to Telegram Group</h2>
+                    <div style="display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
+                        <input type="text" id="pushLinkInput" placeholder="Paste Cricbuzz / ESPN live score link here..." style="flex: 1; min-width: 250px; padding: 0.8rem 1rem; border: 2px solid #a5d6a7; border-radius: 8px; font-size: 1rem; font-family: 'Rajdhani', sans-serif;">
+                        <button onclick="pushLinkToTelegram()" style="background: #4caf50; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; font-family: 'Rajdhani', sans-serif; white-space: nowrap;">📢 Send Link</button>
+                        <button onclick="pushCustomMessage()" style="background: #2196f3; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; font-family: 'Rajdhani', sans-serif; white-space: nowrap;">✏️ Custom Message</button>
+                    </div>
+                </div>
+
                 <!-- Scheduled Matches List -->
                 <div class="admin-panel">
                     <h2>📋 Scheduled Matches</h2>
@@ -2080,16 +2127,24 @@
                     };
                 }
 
-                // Merge with existing localStorage predictions (keep local data for current user)
+                // Merge: database is source of truth for results
                 const existingPredictions = getLocalStorage('predictions', {});
                 const mergedPredictions = { ...predictionsMap };
 
-                // If current user has local predictions not in database, keep them
+                // Only add local predictions that don't exist in DB yet (truly offline predictions)
                 if (currentUser && existingPredictions[currentUser.username]) {
-                    mergedPredictions[currentUser.username] = {
-                        ...mergedPredictions[currentUser.username],
-                        ...existingPredictions[currentUser.username]
-                    };
+                    const localPreds = existingPredictions[currentUser.username];
+                    const dbPreds = mergedPredictions[currentUser.username] || {};
+                    for (const matchId in localPreds) {
+                        if (!dbPreds[matchId]) {
+                            // This prediction only exists locally — keep it
+                            if (!mergedPredictions[currentUser.username]) {
+                                mergedPredictions[currentUser.username] = {};
+                            }
+                            mergedPredictions[currentUser.username][matchId] = localPreds[matchId];
+                        }
+                        // If prediction exists in DB, DB version wins (has correct result)
+                    }
                 }
 
                 setLocalStorage('predictions', mergedPredictions);
@@ -2850,6 +2905,25 @@
 
             renderMatches();
             updateLeaderboard();
+
+            // Check and send Telegram reminders for upcoming matches
+            checkPredictionReminders();
+            // Re-check every 5 minutes while app is open
+            setInterval(checkPredictionReminders, 5 * 60 * 1000);
+        }
+
+        // Silently check if any upcoming matches need a Telegram reminder
+        async function checkPredictionReminders() {
+            if (!USE_DATABASE) return;
+            try {
+                await fetch(`${API_URL}?action=checkAndSendReminders`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+            } catch (e) {
+                // Silent fail - reminders are best-effort
+            }
         }
 
         // Sync current user's predictions from localStorage to database
@@ -2870,11 +2944,12 @@
             for (const matchId in userPredictions) {
                 const pred = userPredictions[matchId];
                 try {
+                    // Only sync the team choice, NEVER the result
+                    // Results are set server-side by updateMatchResults
                     await dbCall('savePrediction', {
                         username: currentUser.username,
                         matchId: matchId,
-                        team: pred.team,
-                        result: pred.result || null
+                        team: pred.team
                     });
                 } catch (e) {
                     console.log('Could not sync prediction:', e.message);
@@ -3086,9 +3161,9 @@
                         dbCall('sendTelegram', {
                             matchDetails: {
                                 team1: match.team1.name,
-                                team1Flag: getTeamFlag(match.team1.name),
+                                team1Flag: getTeamCode(match.team1.name),
                                 team2: match.team2.name,
-                                team2Flag: getTeamFlag(match.team2.name),
+                                team2Flag: getTeamCode(match.team2.name),
                                 winner: winnerTeamName
                             },
                             leaderboardTop
@@ -3102,6 +3177,117 @@
                 renderAdminMatches();
                 renderMatches();
             }
+        }
+
+        // === Telegram Live Update Functions ===
+
+        async function sendTelegramText(text) {
+            if (!USE_DATABASE) return;
+            try {
+                await dbCall('sendTelegramUpdate', { text });
+                showMessage('Sent to Telegram!', 'success');
+            } catch (e) {
+                showMessage('Failed to send to Telegram', 'error');
+            }
+        }
+
+        function getMatchById(matchId) {
+            const matches = getLocalStorage('matches', []);
+            return matches.find(m => m.id === matchId);
+        }
+
+        // Get clean team code for Telegram (no HTML)
+        function getTeamCode(teamName) {
+            const resolvedName = TEAM_REPLACEMENTS[teamName] || teamName;
+            const team = TEAMS.find(t => t.name === resolvedName);
+            return team ? team.code : teamName;
+        }
+
+        function sendMatchUpdate(matchId, type) {
+            const match = getMatchById(matchId);
+            if (!match) return;
+
+            const t1 = match.team1.name;
+            const t2 = match.team2.name;
+            const c1 = getTeamCode(t1);
+            const c2 = getTeamCode(t2);
+            const header = `*${t1}* (${c1}) vs *${t2}* (${c2})`;
+
+            switch (type) {
+                case 'start': {
+                    if (confirm(`Send "Match Started" for ${t1} vs ${t2}?`)) {
+                        sendTelegramText(`🏏 *Match Started!*\n\n${header}\n\n🔴 The match is now LIVE!`);
+                    }
+                    break;
+                }
+                case 'toss': {
+                    const winner = prompt(`Who won the toss?\n\n1) ${t1}\n2) ${t2}\n\nEnter 1 or 2:`);
+                    if (!winner || (winner !== '1' && winner !== '2')) return;
+                    const tossWinner = winner === '1' ? t1 : t2;
+                    const elected = prompt('Elected to?\n\n1) Bat\n2) Bowl\n\nEnter 1 or 2:');
+                    if (!elected || (elected !== '1' && elected !== '2')) return;
+                    const decision = elected === '1' ? 'BAT' : 'BOWL';
+                    sendTelegramText(`🪙 *Toss Result!*\n\n${header}\n\n*${tossWinner}* won the toss and elected to *${decision}*`);
+                    break;
+                }
+                case 'wicket': {
+                    const team = prompt(`Which team lost a wicket?\n\n1) ${t1}\n2) ${t2}\n\nEnter 1 or 2:`);
+                    if (!team || (team !== '1' && team !== '2')) return;
+                    const wTeam = team === '1' ? t1 : t2;
+                    const runs = prompt('Runs:');
+                    if (!runs) return;
+                    const wickets = prompt('Wickets:');
+                    if (!wickets) return;
+                    const overs = prompt('Overs (e.g. 6.4):');
+                    if (!overs) return;
+                    sendTelegramText(`💥 *Wicket down for ${wTeam}!*\n\n${header}\n\n${wTeam}: *${runs}/${wickets}* in ${overs} overs`);
+                    break;
+                }
+                case 'fifty': {
+                    const fTeam = prompt(`Which team does the player belong to?\n\n1) ${t1}\n2) ${t2}\n\nEnter 1 or 2:`);
+                    if (!fTeam || (fTeam !== '1' && fTeam !== '2')) return;
+                    const playerTeam = fTeam === '1' ? t1 : t2;
+                    const player = prompt('Player name:');
+                    if (!player) return;
+                    const milestone = prompt('Milestone?\n\n1) Fifty (50)\n2) Hundred (100)\n\nEnter 1 or 2:');
+                    if (!milestone || (milestone !== '1' && milestone !== '2')) return;
+                    const isHundred = milestone === '2';
+                    const emoji = isHundred ? '💯' : '🔥';
+                    const label = isHundred ? 'HUNDRED' : 'FIFTY';
+                    sendTelegramText(`${emoji} *${label}!*\n\n${header}\n\n🏏 *${player}* (${playerTeam}) reaches ${isHundred ? '100' : '50'}! ${emoji}`);
+                    break;
+                }
+                case 'innings': {
+                    const iTeam = prompt(`Which team's innings ended?\n\n1) ${t1}\n2) ${t2}\n\nEnter 1 or 2:`);
+                    if (!iTeam || (iTeam !== '1' && iTeam !== '2')) return;
+                    const inningsTeam = iTeam === '1' ? t1 : t2;
+                    const iRuns = prompt('Final runs:');
+                    if (!iRuns) return;
+                    const iWickets = prompt('Wickets fallen:');
+                    if (!iWickets) return;
+                    const iOvers = prompt('Overs (e.g. 20):');
+                    if (!iOvers) return;
+                    sendTelegramText(`📊 *Innings Over!*\n\n${header}\n\n${inningsTeam}: *${iRuns}/${iWickets}* (${iOvers} overs)`);
+                    break;
+                }
+            }
+        }
+
+        function pushLinkToTelegram() {
+            const input = document.getElementById('pushLinkInput');
+            const link = input.value.trim();
+            if (!link) {
+                showMessage('Please paste a link first!', 'error');
+                return;
+            }
+            sendTelegramText(`🔗 *Follow the match live!*\n\n👉 ${link}`);
+            input.value = '';
+        }
+
+        function pushCustomMessage() {
+            const msg = prompt('Enter your custom message for the Telegram group:');
+            if (!msg) return;
+            sendTelegramText(`📣 *Update:*\n\n${msg}`);
         }
 
         async function resetMatchResult(matchId) {
@@ -3177,83 +3363,51 @@
         }
 
         async function revertPredictionResults(matchId, previousWinner) {
-            const predictions = getLocalStorage('predictions', {});
-            const userStats = getLocalStorage('userStats', {});
+            // Server-side batch revert: resets ALL predictions for this match
+            // and recalculates ALL user stats in a single reliable operation
+            if (USE_DATABASE) {
+                try {
+                    await dbCall('revertMatchResults', { matchId });
+                    await loadSharedDataFromDatabase();
+                    return;
+                } catch (e) {
+                    console.log('Server-side revert failed, falling back to client-side:', e.message);
+                }
+            }
 
+            // Fallback: client-side revert
+            let predictions = getLocalStorage('predictions', {});
             for (let username in predictions) {
                 if (predictions[username][matchId]) {
-                    const prediction = predictions[username][matchId];
-
-                    // If this prediction was correct, deduct the point
-                    if (prediction.result === 'correct' && prediction.team === previousWinner) {
-                        if (userStats[username]) {
-                            userStats[username].points = Math.max(0, (userStats[username].points || 0) - 1);
-                        }
-                    }
-
-                    // Reset prediction result
-                    prediction.result = null;
-
-                    // Sync reverted prediction to database
-                    try {
-                        await dbCall('savePrediction', {
-                            username: username,
-                            matchId: matchId,
-                            team: prediction.team,
-                            result: null
-                        });
-                    } catch (e) {
-                        console.log('Could not sync reverted prediction to database:', e.message);
-                    }
+                    predictions[username][matchId].result = null;
                 }
             }
-
             setLocalStorage('predictions', predictions);
-            setLocalStorage('userStats', userStats);
-
-            // Sync all stats to database
-            try {
-                const statsArray = Object.values(userStats);
-                if (statsArray.length > 0) {
-                    await dbCall('updateStats', { stats: statsArray });
-                }
-            } catch (e) {
-                console.log('Could not sync stats to database:', e.message);
-            }
+            await updateAllUserStats();
         }
 
         async function updatePredictionResults(matchId, winner) {
-            const predictions = getLocalStorage('predictions', {});
-
-            for (let username in predictions) {
-                if (predictions[username][matchId]) {
-                    const prediction = predictions[username][matchId];
-                    if (prediction.team === winner) {
-                        prediction.result = 'correct';
-                        // Add 1 point
-                        const userStats = getLocalStorage('userStats', {});
-                        if (userStats[username]) {
-                            userStats[username].points = (userStats[username].points || 0) + 1;
-                            setLocalStorage('userStats', userStats);
-                        }
-                    } else {
-                        prediction.result = 'incorrect';
-                    }
-
-                    // Sync prediction result to database
-                    try {
-                        await dbCall('savePrediction', {
-                            username: username,
-                            matchId: matchId,
-                            team: prediction.team,
-                            result: prediction.result
-                        });
-                    } catch (e) {
-                        console.log('Could not sync prediction result to database:', e.message);
-                    }
+            // Server-side batch update: marks ALL predictions for this match
+            // and recalculates ALL user stats in a single reliable operation
+            if (USE_DATABASE) {
+                try {
+                    await dbCall('updateMatchResults', { matchId, winner });
+                    // Refresh local data from database
+                    await loadSharedDataFromDatabase();
+                    return;
+                } catch (e) {
+                    console.log('Server-side update failed, falling back to client-side:', e.message);
                 }
             }
 
+            // Fallback: client-side update (only if server-side fails)
+            let predictions = getLocalStorage('predictions', {});
+            for (let username in predictions) {
+                if (predictions[username][matchId]) {
+                    const prediction = predictions[username][matchId];
+                    prediction.result = (prediction.team === winner) ? 'correct' : 'incorrect';
+                }
+            }
             setLocalStorage('predictions', predictions);
             await updateAllUserStats();
         }
@@ -3325,6 +3479,16 @@
                                 </div>
                             </div>
                         ` : ''}
+                        <div class="tg-update-section">
+                            <strong>📢 Telegram Updates:</strong>
+                            <div class="tg-update-buttons">
+                                <button class="tg-btn" onclick="sendMatchUpdate('${match.id}', 'start')">🏏 Started</button>
+                                <button class="tg-btn" onclick="sendMatchUpdate('${match.id}', 'toss')">🪙 Toss</button>
+                                <button class="tg-btn" onclick="sendMatchUpdate('${match.id}', 'wicket')">💥 Wicket</button>
+                                <button class="tg-btn" onclick="sendMatchUpdate('${match.id}', 'fifty')">🔥 50/100</button>
+                                <button class="tg-btn" onclick="sendMatchUpdate('${match.id}', 'innings')">📊 Innings Over</button>
+                            </div>
+                        </div>
                     </div>
                     <div class="admin-actions">
                         ${match.status === 'completed' ? `
@@ -3530,8 +3694,7 @@
                 await dbCall('savePrediction', {
                     username: currentUser.username,
                     matchId: matchId,
-                    team: teamName,
-                    result: 'pending'
+                    team: teamName
                 });
             } catch (e) {
                 console.log('Could not sync prediction to database:', e.message);
@@ -3582,9 +3745,34 @@
         }
 
         async function updateAllUserStats() {
-            const predictions = getLocalStorage('predictions', {});
+            let predictions = getLocalStorage('predictions', {});
             const stats = getLocalStorage('userStats', {});
-            const matches = getLocalStorage('matches', []);
+            let matches = getLocalStorage('matches', []);
+
+            // Fetch ALL predictions from database to ensure completeness
+            if (USE_DATABASE) {
+                try {
+                    const dbPredictions = await dbCall('getPredictions');
+                    if (dbPredictions && dbPredictions.length > 0) {
+                        for (const p of dbPredictions) {
+                            if (!predictions[p.username]) {
+                                predictions[p.username] = {};
+                            }
+                            // Only overwrite if DB has a result or local doesn't exist
+                            if (!predictions[p.username][p.match_id] || p.result) {
+                                predictions[p.username][p.match_id] = {
+                                    team: p.team,
+                                    result: p.result,
+                                    timestamp: p.timestamp
+                                };
+                            }
+                        }
+                        setLocalStorage('predictions', predictions);
+                    }
+                } catch (e) {
+                    console.log('Could not fetch predictions from database:', e.message);
+                }
+            }
 
             for (let username in predictions) {
                 const userPredictions = predictions[username];
