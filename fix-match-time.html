@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fix Australia vs Oman Match Time</title>
+</head>
+<body>
+    <h1>Fixing Match Time...</h1>
+    <div id="status"></div>
+
+    <script>
+        const API_URL = '/api/db';
+        const status = document.getElementById('status');
+
+        async function fixMatch() {
+            try {
+                status.innerHTML = '🔍 Step 1: Deleting old match...<br>';
+
+                // Delete old match (Feb 19, 22:30)
+                const oldMatchId = 'fixture_2026-02-19_22:30_AUS_OMA';
+                await fetch(`${API_URL}?action=deleteMatch`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ matchId: oldMatchId })
+                });
+
+                status.innerHTML += '✅ Old match deleted!<br><br>';
+                status.innerHTML += '🔍 Step 2: Adding new match with correct time...<br>';
+
+                // Add new match (Feb 20, 18:30)
+                const newMatch = {
+                    id: 'fixture_2026-02-20_18:30_AUS_OMA',
+                    team1: {
+                        name: 'Australia',
+                        flag: '🇦🇺',
+                        code: 'AUS',
+                        group: 'B'
+                    },
+                    team2: {
+                        name: 'Oman',
+                        flag: '🇴🇲',
+                        code: 'OMA',
+                        group: 'B'
+                    },
+                    dateTime: new Date('2026-02-20T18:30:00').toISOString(),
+                    stage: 'group',
+                    status: 'upcoming',
+                    winner: null,
+                    points: 1
+                };
+
+                await fetch(`${API_URL}?action=addMatch`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ match: newMatch })
+                });
+
+                status.innerHTML += '✅ New match added with correct time!<br><br>';
+                status.innerHTML += '<h2 style="color: green;">✅ FIXED! Match now shows Feb 20, 18:30</h2>';
+                status.innerHTML += '<p>Refresh your main app to see the changes!</p>';
+
+            } catch (error) {
+                status.innerHTML += `<h2 style="color: red;">❌ Error: ${error.message}</h2>`;
+                console.error(error);
+            }
+        }
+
+        // Run immediately
+        fixMatch();
+    </script>
+</body>
+</html>
