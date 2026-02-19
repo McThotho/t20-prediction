@@ -78,6 +78,13 @@ export default async function handler(req, res) {
           )
         `;
 
+        // Add reminder_sent column if it doesn't exist
+        try {
+          await sql`ALTER TABLE matches ADD COLUMN IF NOT EXISTS reminder_sent BOOLEAN DEFAULT false`;
+        } catch (e) {
+          console.log('reminder_sent column may already exist:', e.message);
+        }
+
         // Insert default admin user if not exists
         await sql`
           INSERT INTO users (username, phone, password, role)
@@ -150,7 +157,9 @@ export default async function handler(req, res) {
           INSERT INTO predictions (username, match_id, team, result)
           VALUES (${saveUsername}, ${matchId}, ${team}, ${result || null})
           ON CONFLICT (username, match_id)
-          DO UPDATE SET team = ${team}, result = ${result || null}, timestamp = CURRENT_TIMESTAMP
+          DO UPDATE SET team = ${team},
+            result = COALESCE(predictions.result, ${result || null}),
+            timestamp = CURRENT_TIMESTAMP
         `;
         return res.status(200).json({ success: true });
 
@@ -245,6 +254,22 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: tgData.ok, result: tgData });
       }
 
+      case 'sendTelegramUpdate': {
+        const botToken2 = process.env.TELEGRAM_BOT_TOKEN;
+        const chatId2 = process.env.TELEGRAM_CHAT_ID;
+        if (!botToken2 || !chatId2) {
+          return res.status(200).json({ success: true, skipped: true, message: 'Telegram not configured' });
+        }
+        const { text: msgText } = req.body;
+        const tgRes2 = await fetch(`https://api.telegram.org/bot${botToken2}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: chatId2, text: msgText, parse_mode: 'Markdown', disable_web_page_preview: false })
+        });
+        const tgData2 = await tgRes2.json();
+        return res.status(200).json({ success: tgData2.ok, result: tgData2 });
+      }
+
       case 'getTelegramChatId': {
         const botToken = process.env.TELEGRAM_BOT_TOKEN;
         if (!botToken) {
@@ -270,6 +295,144 @@ export default async function handler(req, res) {
             : 'No group chats found. Make sure the bot is added to a group and someone has sent a message.',
           chats
         });
+      }
+
+      case 'revertMatchResults': {
+        const { matchId: revertMatchId } = req.body;
+        // Reset all predictions for this match back to pending
+        await sql`
+          UPDATE predictions SET result = NULL
+          WHERE match_id = ${revertMatchId}
+        `;
+        // Recalculate stats for ALL users
+        const revertAllPreds = await sql`SELECT username, result FROM predictions WHERE result IS NOT NULL`;
+        const revertStats = {};
+        for (const p of revertAllPreds) {
+          if (!revertStats[p.username]) {
+            revertStats[p.username] = { correct: 0 };
+          }
+          if (p.result === 'correct') {
+            revertStats[p.username].correct += 1;
+          }
+        }
+        const revertUserTotals = await sql`SELECT username, COUNT(*) as cnt FROM predictions GROUP BY username`;
+        for (const u of revertUserTotals) {
+          if (!revertStats[u.username]) {
+            revertStats[u.username] = { correct: 0 };
+          }
+          const s = revertStats[u.username];
+          const accuracy = u.cnt > 0 ? Math.round((s.correct / u.cnt) * 10000) / 100 : 0;
+          await sql`
+            INSERT INTO user_stats (username, total_predictions, correct_predictions, points, accuracy)
+            VALUES (${u.username}, ${u.cnt}, ${s.correct}, ${s.correct}, ${accuracy})
+            ON CONFLICT (username)
+            DO UPDATE SET
+              total_predictions = ${u.cnt},
+              correct_predictions = ${s.correct},
+              points = ${s.correct},
+              accuracy = ${accuracy},
+              updated_at = CURRENT_TIMESTAMP
+          `;
+        }
+        return res.status(200).json({ success: true });
+      }
+
+      case 'updateMatchResults': {
+        const { matchId: resultsMatchId, winner: resultsWinner } = req.body;
+        // Mark all predictions for this match as correct/incorrect in a single query
+        await sql`
+          UPDATE predictions
+          SET result = CASE WHEN team = ${resultsWinner} THEN 'correct' ELSE 'incorrect' END
+          WHERE match_id = ${resultsMatchId}
+        `;
+        // Recalculate stats for ALL users who have predictions
+        const allPreds = await sql`SELECT username, result FROM predictions WHERE result IS NOT NULL`;
+        const userStats = {};
+        for (const p of allPreds) {
+          if (!userStats[p.username]) {
+            userStats[p.username] = { correct: 0, total: 0 };
+          }
+          userStats[p.username].total += 1;
+          if (p.result === 'correct') {
+            userStats[p.username].correct += 1;
+          }
+        }
+        // Also include users with no scored predictions yet
+        const allUserPreds = await sql`SELECT DISTINCT username, COUNT(*) as cnt FROM predictions GROUP BY username`;
+        for (const u of allUserPreds) {
+          if (!userStats[u.username]) {
+            userStats[u.username] = { correct: 0, total: 0 };
+          }
+        }
+        // Update stats table
+        for (const [username, s] of Object.entries(userStats)) {
+          const totalPreds = (allUserPreds.find(u => u.username === username)?.cnt) || s.total;
+          const accuracy = totalPreds > 0 ? Math.round((s.correct / totalPreds) * 10000) / 100 : 0;
+          await sql`
+            INSERT INTO user_stats (username, total_predictions, correct_predictions, points, accuracy)
+            VALUES (${username}, ${totalPreds}, ${s.correct}, ${s.correct}, ${accuracy})
+            ON CONFLICT (username)
+            DO UPDATE SET
+              total_predictions = ${totalPreds},
+              correct_predictions = ${s.correct},
+              points = ${s.correct},
+              accuracy = ${accuracy},
+              updated_at = CURRENT_TIMESTAMP
+          `;
+        }
+        return res.status(200).json({ success: true, updated: Object.keys(userStats).length });
+      }
+
+      case 'checkAndSendReminders': {
+        const reminderBotToken = process.env.TELEGRAM_BOT_TOKEN;
+        const reminderChatId = process.env.TELEGRAM_CHAT_ID;
+        if (!reminderBotToken || !reminderChatId) {
+          return res.status(200).json({ success: true, skipped: true, message: 'Telegram not configured' });
+        }
+
+        // Find upcoming matches starting within the next 65 minutes that haven't had reminders sent
+        const upcomingMatches = await sql`
+          SELECT * FROM matches
+          WHERE status = 'upcoming'
+            AND (reminder_sent = false OR reminder_sent IS NULL)
+            AND date_time > NOW()
+            AND date_time <= NOW() + INTERVAL '65 minutes'
+        `;
+
+        const sent = [];
+        for (const match of upcomingMatches) {
+          const matchTime = new Date(match.date_time);
+          const now = new Date();
+          const minutesUntil = Math.round((matchTime - now) / 60000);
+
+          const matchPoints = match.points || 1;
+          let reminderText = `⏰ *FINAL REMINDER!*\n\n`;
+          reminderText += `⭐ *${matchPoints} ${matchPoints === 1 ? 'Point' : 'Points'}*\n`;
+          reminderText += `🏏 *${match.team1_name}* (${match.team1_code}) vs *${match.team2_name}* (${match.team2_code})\n\n`;
+          reminderText += `📅 Match starts in ~${minutesUntil} minutes!\n`;
+          reminderText += `⚠️ You have *30 minutes* to lock in your prediction!\n\n`;
+          reminderText += `🔒 Predictions close 30 min before kick-off.\n`;
+          reminderText += `Don't miss out!\n\n`;
+          reminderText += `👉 [Predict now!](https://vhpl-t20-prediction.vercel.app)`;
+
+          try {
+            const reminderRes = await fetch(`https://api.telegram.org/bot${reminderBotToken}/sendMessage`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ chat_id: reminderChatId, text: reminderText, parse_mode: 'Markdown' })
+            });
+            const reminderData = await reminderRes.json();
+
+            if (reminderData.ok) {
+              await sql`UPDATE matches SET reminder_sent = true WHERE id = ${match.id}`;
+              sent.push(match.id);
+            }
+          } catch (e) {
+            console.error(`Failed to send reminder for match ${match.id}:`, e.message);
+          }
+        }
+
+        return res.status(200).json({ success: true, checked: upcomingMatches.length, sent: sent.length, matches: sent });
       }
 
       default:
