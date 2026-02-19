@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Cache</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: 50px auto; padding: 20px; text-align: center; }
+        .success { color: green; font-size: 1.5em; font-weight: bold; margin: 20px 0; }
+        button { background: #007bff; color: white; padding: 15px 30px; font-size: 1.1em; border: none; border-radius: 5px; cursor: pointer; margin: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Fix Match Time Display</h1>
+    <p>Click below to clear cached data and reload with correct time</p>
+    <button onclick="localStorage.clear(); document.getElementById('s').innerHTML='✅ Done! Redirecting...'; setTimeout(() => location.href='/', 1000)">🔄 Clear Cache & Reload</button>
+    <div id="s"></div>
+</body>
+</html>
